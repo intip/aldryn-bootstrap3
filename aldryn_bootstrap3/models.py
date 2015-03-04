@@ -268,9 +268,10 @@ class Boostrap3ImagePlugin(CMSPlugin):
             txt += ' ({})'.format(self.file.url)
         return txt
 
-    def srcset(self):
+    def srcset(self, column_sizes, aspect_ratios):
         if not self.file:
             return []
+        return utils.srcset_and_sizes(column_sizes)
         items = collections.OrderedDict()
         if self.aspect_ratio:
             aspect_width, aspect_height = tuple([int(i) for i in self.aspect_ratio.split('x')])

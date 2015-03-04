@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 from django.utils.translation import ugettext_lazy as _
-import django.forms.widgets
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
