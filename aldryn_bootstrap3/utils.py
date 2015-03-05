@@ -14,6 +14,8 @@ class ColumnContext(list):
         {'xs': 12, 'lg': 12},
     ]
     """
+    device_sizes = constants.DEVICE_SIZES
+
     def __init__(self, *args, **kwargs):
         self.grid_size = kwargs.pop(
             'grid_size', settings.ALDRYN_BOOTSTRAP3_GRID_SIZE)
@@ -44,14 +46,40 @@ class ColumnContext(list):
         """
         grid_size = self.grid_size
         result = {
-            size: float(grid_size)
-            for size in constants.DEVICE_SIZES
+            device: float(grid_size)
+            for device in constants.DEVICE_SIZES
         }
         for column in self:
-            for key, value in column.items():
-                result[key] *= (float(value) / float(grid_size))
-        result = {key: int(value) in result.items()}
+            for device in self.device_sizes:
+                if device in column.keys():
+                    # we already have a value
+                    pass
+                else:
+                    # device not explicitly defined.
+                    # Fallback to the next smaller one on the same level.
+                    # this should really be a recursive function
+                    if device == 'xs':
+                        # it's the smallest device that is not defined...
+                        # fallback to the parent
+                        column[device] = result[device]
+                    elif device == 'sm':
+                        column[device] = column['xs']
+                    elif device == 'md':
+                        column[device] = column['sm']
+                    else:  # device == 'lg':
+                        column[device] = column['md']
+                size_at_this_level = column[device]
+                corrected_size = result[device] * (float(size_at_this_level) / float(grid_size))
+                result[device] = corrected_size
         return result
+
+from pprint import pprint
+test_1 = ColumnContext([
+    {'lg': 5, 'md': 6, 'xs': 12},
+    {'lg': 12, 'md': 12},
+])
+pprint(test_1.combined())
+
 
 
 def img_srcset_and_sizes(

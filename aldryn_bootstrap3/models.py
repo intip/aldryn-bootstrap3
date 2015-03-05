@@ -15,7 +15,7 @@ import cms.models.fields
 import filer.fields.file
 import filer.fields.image
 
-from . import model_fields, constants
+from . import model_fields, constants, utils
 from .conf import settings
 
 
