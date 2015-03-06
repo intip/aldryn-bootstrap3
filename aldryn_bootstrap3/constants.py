@@ -67,39 +67,42 @@ DEVICES = (
         'identifier': 'xs',
         'name': _("mobile phones"),
         'width': None,
-        'width_min': 0,
-        'width_max': 767,
+        'width_max': 750,
+        'viewport_width_min': 0,
+        'viewport_width_max': 767,
         'icon': 'mobile-phone',
     },
     {
         'identifier': 'sm',
         'name': _("tablets"),
         'width': 750,
-        'width_min': 768,
-        'width_max': 991,
+        'viewport_width_min': 768,
+        'viewport_width_max': 991,
         'icon': 'tablet',
     },
     {
         'identifier': 'md',
         'name': _("laptops"),
         'width': 970,
-        'width_min': 992,
-        'width_max': 1199,
+        'viewport_width_min': 992,
+        'viewport_width_max': 1199,
         'icon': 'laptop',
     },
     {
         'identifier': 'lg',
         'name': _("large desktops"),
         'width': 1170,
-        'width_min': 1200,
-        'width_max': None,  # TODO: find a better value
+        'viewport_width_min': 1200,
+        'viewport_width_max': None,  # TODO: find a better value
         'icon': 'desktop',
     },
 )
 for device in DEVICES:
     identifier = device['identifier']
-    device['long_description'] = "{name} ({width_min}px to {width_max}px)".format(**device)
+    device['long_description'] = "{name} ({viewport_width_min}px to {viewport_width_max}px)".format(**device)
     device['size_name'] = dict(SIZE_CHOICES).get(identifier)
+    if 'width_max' not in device.keys():
+        device['width_max'] = device['width']
 
 DEVICE_DICT = {device['identifier']: device for device in DEVICES}
 

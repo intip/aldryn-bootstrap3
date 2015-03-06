@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 import collections
+import math
 from .conf import settings
 from . import constants
 
@@ -45,10 +46,10 @@ class ColumnContext(list):
         does not exist.
         """
         grid_size = self.grid_size
-        result = {
-            device: float(grid_size)
-            for device in constants.DEVICE_SIZES
-        }
+        result = collections.OrderedDict([
+            (device, float(grid_size))
+            for device in self.device_sizes
+        ])
         for column in self:
             for device in self.device_sizes:
                 if device in column.keys():
@@ -73,12 +74,29 @@ class ColumnContext(list):
                 result[device] = corrected_size
         return result
 
+    def combined_px(self):
+        # naive column width in px. not taking gutters into account.
+        as_cols = self.combined()
+        in_px = collections.OrderedDict()
+        for device, col_size in as_cols.items():
+            device_info = constants.DEVICE_DICT[device]
+            grid_size_px = device_info['width']
+            if grid_size_px is None:
+                # its xs which does not have a fixed width. but it has a max.
+                grid_size_px = device_info['width_max']
+            col_size_px = \
+                float(grid_size_px) * (float(col_size) / float(self.grid_size))
+            in_px[device] = int(math.ceil(col_size_px))
+        return in_px
+
+
 from pprint import pprint
 test_1 = ColumnContext([
     {'lg': 5, 'md': 6, 'xs': 12},
     {'lg': 12, 'md': 12},
 ])
 pprint(test_1.combined())
+pprint(test_1.combined_px())
 
 
 
