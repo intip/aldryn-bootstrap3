@@ -15,7 +15,6 @@ class ColumnContext(list):
         {'xs': 12, 'lg': 12},
     ]
     """
-    device_sizes = constants.DEVICE_SIZES
 
     def __init__(self, *args, **kwargs):
         self.grid_size = kwargs.pop(
@@ -35,7 +34,7 @@ class ColumnContext(list):
     def combined(self):
         """
         calculation of the "actual" size of a column taking
-        parent columns into account (ignoring gutters).
+        parent columns into account.
         For the example above, assuming a grid width of 24, it would
         result in xs=24*(16/24)*(12/24) and lg=24*(6/24)*(12/24),
         so {'xs': 8, 'lg': 3}.
@@ -43,7 +42,8 @@ class ColumnContext(list):
         This also takes into account, that column calculation uses "fallbacks".
         So: On a "md" device, if there is no "col-md-X" defined it will fall
         back to the value of "col-sm-X" and down to "col-xs-X" if that also
-        does not exist.
+        does not exist. If no usable size is defined on a col, it will fall
+        back to the parent col.
         """
         grid_size = self.grid_size
         result = collections.OrderedDict([
@@ -98,6 +98,19 @@ test_1 = ColumnContext([
 pprint(test_1.combined())
 pprint(test_1.combined_px())
 
+test_1 = ColumnContext([
+    {'lg': 8, 'md': 12,},
+    {'lg': 12, 'md': 8,},
+])
+pprint(test_1.combined())
+pprint(test_1.combined_px())
+
+test_1 = ColumnContext([
+    {},
+    {},
+])
+pprint(test_1.combined())
+pprint(test_1.combined_px())
 
 
 def img_srcset_and_sizes(
