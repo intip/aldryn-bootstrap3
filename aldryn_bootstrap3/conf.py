@@ -14,3 +14,4 @@ class AldrynSitesConf(AppConf):
         ('glyphicons', 'glyphicons', 'Glyphicons'),
         ('fontawesome', 'fa', 'Fontawesome'),
     )
+    BOOTSTRAP3_PLUGIN_BASE = 'cms.plugin_base.CMSPluginBase'
