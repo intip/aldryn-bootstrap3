@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('filer', '0002_auto_20150606_2003'),
-        ('cms', '0011_auto_20150419_1006'),
+        ('cms', '__first__'),
         ('aldryn_bootstrap3', '0001_initial'),
     ]
 
