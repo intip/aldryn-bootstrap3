@@ -19,9 +19,9 @@ def get_additional_styles():
 
 
 def get_plugin_base():
-    plugin_base = getattr(settings, 'BOOTSTRAP3_PLUGIN_BASE')
-    mod = __import__(plugin_base)
-    components = plugin_base.split('.')
-    for comp in components[1:]:
-        mod = getattr(mod, comp)
-    return mod
+    cms_plugin_base = 'cms.plugin_base.CMSPluginBase'
+    plugin_base = getattr(settings, 'BOOTSTRAP3_PLUGIN_BASE', cms_plugin_base)
+    plugin_base_class = plugin_base.split('.')[-1]
+    plugin_base_module = plugin_base.replace(plugin_base_class, '')
+    mod = __import__(plugin_base_module, fromlist=[plugin_base_class, ])
+    return getattr(mod, plugin_base_class)
